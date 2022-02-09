@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export const Login = () => {
 
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    console.log(email);
+  }, [email])
+
+  useEffect (() => {
+    console.log(password);
+  }, [password])
 
   const handleEntrar = () => {
     console.log(email);
