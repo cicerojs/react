@@ -6,12 +6,12 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
 
-  const emailLength = useMemo(() => {
+  const emailLength = useMemo(() => { //Guarda na memória cálculos complexos para que sejam reexecutados apenas uma vez 
     console.log('Executou');
     return email.length;
   }, [email.length]) ;
 
-  const handleEntrar = useCallback( () => {
+  const handleEntrar = useCallback( () => {//Guarda na memória funções para que sejam reconstruídos
     console.log(email);
     console.log(password);
   }, [email, password]);
