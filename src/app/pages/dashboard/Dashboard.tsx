@@ -1,7 +1,12 @@
 import { useCallback, useState } from 'react';
 
+interface IlistItem{
+    title: string,
+    isSelected: boolean
+}
+
 export const Dashboard = () => {
-    const [lista, setLista] = useState<string[]>(['Teste1', 'Teste2', 'Teste3']);
+    const [lista, setLista] = useState<IlistItem[]>([]);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement>  = useCallback((e) => {
 
@@ -15,9 +20,15 @@ export const Dashboard = () => {
 
             setLista((oldLista) => {
 
-                if(oldLista.includes(value)) return oldLista;
+                if(oldLista.some((listItem) => listItem.title === value)) return oldLista;
 
-                return [...oldLista, value];
+                return [
+                    ...oldLista, 
+                    {
+                        title: value,
+                        isSelected: false
+                    }
+                ];
             })
         }
     }, []);
@@ -28,9 +39,30 @@ export const Dashboard = () => {
             <input
                 onKeyDown={handleInputKeyDown}
             />
+
+            <p>{lista.filter((listItem, index) => listItem.isSelected).length}</p>
+
             <ul>
-                {lista.map((value) => {
-                    return <li key={value}>{value}</li>
+                {lista.map((listItem, index) => {
+                    return <li key={listItem.title}>
+                            <input type="checkbox" 
+                                    checked = {listItem.isSelected}
+                                   onChange={() => {
+                                       setLista(oldlista => {
+                                           return oldlista.map(oldListItem => {
+                                                const newIsSelected = oldListItem.title === listItem.title
+                                                                      ? !oldListItem.isSelected
+                                                                      : oldListItem.isSelected
+                                                return {
+                                                    ...oldListItem,
+                                                    isSelected: newIsSelected
+                                                }
+                                           });
+                                       })
+                                   }}
+                            />
+                            {listItem.title}
+                           </li>
                 })}
             </ul>
         </div>
