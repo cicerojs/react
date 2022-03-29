@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { useCallback, useEffect, useState } from 'react';
 import { ApiException } from '../../shared/services/api/ApiException';
 import { ITarefa, TarefasService } from '../../shared/services/tarefas/TarefasService';
@@ -26,21 +27,18 @@ export const Dashboard = () => {
 
             e.currentTarget.value = '';
 
-            setLista((oldLista) => {
+            if(lista.some((listItem) => listItem.title === value)) return;
 
-                if(oldLista.some((listItem) => listItem.title === value)) return oldLista;
-
-                return [
-                    ...oldLista, 
-                    {
-                        title: value,
-                        isCompleted: false,
-                        id: oldLista.length
+            TarefasService.create({title: value, isCompleted: false})
+                .then((result) => {
+                    if (result instanceof ApiException) {
+                        alert(result.message);
+                    }else{
+                        setLista((oldLista) => [...oldLista, result]);
                     }
-                ];
-            })
+                })
         }
-    }, []);
+    }, [lista]);
     
     return (
         <div>
